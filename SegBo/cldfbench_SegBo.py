@@ -8,7 +8,8 @@ class Dataset(BaseDataset):
     id = "SegBo"
 
     def cldf_specs(self):  # A dataset must declare all CLDF sets it creates.
-        return super().cldf_specs()
+        from cldfbench import CLDFSpec
+        return CLDFSpec(dir=self.cldf_dir, module='StructureDataset')
 
     def cmd_download(self, args):
         """
@@ -19,7 +20,7 @@ class Dataset(BaseDataset):
         """
         self.raw_dir.download('https://raw.githubusercontent.com/segbo-db/segbo/master/data/segbo_with_glottolog.csv', 'segbo_with_glottolog.csv')
         self.raw_dir.download('https://wals.info/feature/1A.tab', '1A.tsv')
-        
+
     def cmd_makecldf(self, args):
         """
         Convert the raw data to a CLDF dataset.
@@ -36,6 +37,7 @@ class Dataset(BaseDataset):
                     delimiter='\t',
                 )
         ):
+            print(row)
             args.writer.objects['ValueTable'].append({
                 'ID': row['wals code'],
                 'Language_ID': row['wals code'],
